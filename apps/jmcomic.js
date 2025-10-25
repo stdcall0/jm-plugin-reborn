@@ -83,9 +83,9 @@ export class JMComicPlugin extends Plugin {
     }
     checkTrigger() {
         var _a, _b, _c, _d;
-        const enabled_groups = ((_a = Config.get('jmcomic')) === null || _a === void 0 ? void 0 : _a.get('enabled_groups')) || [];
-        const disabled_groups = ((_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('disabled_groups')) || [];
-        const enable_pm = ((_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('enable_pm')) || false;
+        const enabled_groups = ((_a = Config.get('jmcomic')) === null || _a === void 0 ? void 0 : _a.get('trigger.enabled_groups')) || [];
+        const disabled_groups = ((_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('trigger.disabled_groups')) || [];
+        const enable_pm = ((_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('trigger.enable_pm')) || false;
         if (enabled_groups.length === 0 && disabled_groups.length === 0) {
             // If both enabled_groups and disabled_groups are empty, the plugin is enabled for all groups
             return true;
