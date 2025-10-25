@@ -25,7 +25,7 @@ export default class ConfigFile {
         return this.document.hasIn(key.split('.'));
     }
     get(key) {
-        return this.document.getIn(key.split('.'));
+        return this.document.getIn(key.split('.')).toJSON();
     }
     set(key, value) {
         this.document.setIn(key.split('.'), value);
