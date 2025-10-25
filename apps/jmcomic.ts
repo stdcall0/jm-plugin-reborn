@@ -113,9 +113,9 @@ export class JMComicPlugin extends Plugin {
     }
 
     checkTrigger() {
-        const enabled_groups: number[] = Config.get('jmcomic')?.get('enabled_groups') || [];
-        const disabled_groups: number[] = Config.get('jmcomic')?.get('disabled_groups') || [];
-        const enable_pm: boolean = Config.get('jmcomic')?.get('enable_pm') || false;
+        const enabled_groups: number[] = Config.get('jmcomic')?.get('trigger.enabled_groups') || [];
+        const disabled_groups: number[] = Config.get('jmcomic')?.get('trigger.disabled_groups') || [];
+        const enable_pm: boolean = Config.get('jmcomic')?.get('trigger.enable_pm') || false;
 
         if (enabled_groups.length === 0 && disabled_groups.length === 0) {
             // If both enabled_groups and disabled_groups are empty, the plugin is enabled for all groups
