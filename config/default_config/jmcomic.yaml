@@ -12,6 +12,7 @@ trigger:
 
 # Fields to include in the response message.
 # Select & sort the fields as desired.
+# Commented fields requires JM with cookies in jm.py
 # Available fields:
 #  - id, name, page_count, comment_count,
 #  - pub_date, update_date, likes, views,
@@ -19,10 +20,10 @@ trigger:
 fields:
   - id
   - name
-  - page_count
+#  - page_count
   - comment_count
-  - pub_date
-  - update_date
+#  - pub_date
+#  - update_date
   - likes
   - views
   - authors
@@ -56,6 +57,11 @@ compact_fields: true
 # NOTE: setting this to false will not skip the download of the cover image,
 # Go to apps/jm.py and set SKIP_COVER=True to completely disable that.
 send_cover: true
+
+# Whether to send a message when the jmcomic query starts.
+# This is useful to indicate that the bot is working
+# because cover download may take some time.
+started_msg: true
 
 # Whether to put all messages into a forwarded message for clarity.
 # If compact_fields is false, this option is forcefully enabled.
