@@ -1,0 +1,6 @@
+# Python Interpreter Configuration
+
+# Replace this with a explict path
+# if the target python is not the one in path
+# e.g python: /usr/bin/python3.9
+python: python3

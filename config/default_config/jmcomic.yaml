@@ -1,0 +1,62 @@
+# JMComic Plugin Configuration
+
+# If enabled_groups is empty and disabled_groups is empty, the plugin is enabled for all groups.
+# If enabled_groups is not empty, the plugin is only enabled for those groups.
+# else if disabled_groups is not empty, the plugin is disabled for those groups.
+# If enable_pm is true, the plugin is also enabled for private messages.
+trigger:
+  enabled_groups:
+    - 123456789
+  disabled_groups: []
+  enable_pm: false
+
+# Fields to include in the response message.
+# Select & sort the fields as desired.
+# Available fields:
+#  - id, name, page_count, comment_count,
+#  - pub_date, update_date, likes, views,
+#  - authors. works, actors, tags
+fields:
+  - id
+  - name
+  - page_count
+  - comment_count
+  - pub_date
+  - update_date
+  - likes
+  - views
+  - authors
+  - works
+  - actors
+  - tags
+
+# Descriptions for each field to be displayed in the response message.
+# While you change fields order above,
+# you don't need to change the order here.
+fields_description:
+  id: "ID"
+  name: "标题"
+  page_count: "页数"
+  comment_count: "评论数"
+  pub_date: "发布日期"
+  update_date: "更新日期"
+  likes: "喜欢数"
+  views: "浏览数"
+  authors: "作者"
+  works: "作品"
+  actors: "角色"
+  tags: "标签"
+
+# Merge all fields into a single message
+# or send each field as a separate message.
+# If true, all fields are combined into one message.
+compact_fields: true
+
+# Whether to send the cover image along with the response.
+# NOTE: setting this to false will not skip the download of the cover image,
+# Go to apps/jm.py and set SKIP_COVER=True to completely disable that.
+send_cover: true
+
+# Whether to put all messages into a forwarded message for clarity.
+# If compact_fields is false, this option is forcefully enabled.
+forward_msg: true
