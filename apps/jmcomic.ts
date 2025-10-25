@@ -4,6 +4,9 @@ import PLUGIN_ID from '#gc.id';
 import { Plugin, Logger, Config, Path, Common } from '#gc';
 
 import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 export class JMComicPlugin extends Plugin {
     static readonly VALID_FIELDS = [
@@ -101,9 +104,9 @@ export class JMComicPlugin extends Plugin {
                     await this.e.reply('封面下载失败...');
             } else {
                 if (forward_msg)
-                    forward_msgs.push(segment.image(cover_img.toString('binary')));
+                    forward_msgs.push(segment.image('base64://' + cover_base64));
                 else
-                    await this.e.reply(segment.image(cover_img.toString('binary')));
+                    await this.e.reply(segment.image('base64://' + cover_base64));
             }
         }
         if (forward_msg) {
@@ -117,15 +120,15 @@ export class JMComicPlugin extends Plugin {
         const disabled_groups: number[] = Config.get('jmcomic')?.get('trigger.disabled_groups') || [];
         const enable_pm: boolean = Config.get('jmcomic')?.get('trigger.enable_pm') || false;
 
-        if (enabled_groups.length === 0 && disabled_groups.length === 0) {
-            // If both enabled_groups and disabled_groups are empty, the plugin is enabled for all groups
-            return true;
-        }
-
         const group_id = this.e?.group_id;
         if (!group_id) {
             // If there is no group_id (private message), check enable_pm
             return enable_pm;
+        }
+
+        if (enabled_groups.length === 0 && disabled_groups.length === 0) {
+            // If both enabled_groups and disabled_groups are empty, the plugin is enabled for all groups
+            return true;
         }
 
         if (enabled_groups.includes(group_id)) {
@@ -153,7 +156,15 @@ export class JMComicPlugin extends Plugin {
         }
 
         // Check if the plugin is enabled for this context
-        if (!this.checkTrigger()) return;
+        if (!this.checkTrigger()) {
+            Logger.info(`[${PLUGIN_ID}] jmcomic plugin is disabled for this context.`);
+            return;
+        }
+
+        const startedMsg: boolean = Config.get('jmcomic')?.get('started_msg') || true;
+        if (startedMsg) {
+            await this.e.reply(`正在查询 ${jmID}，请稍候...`, true);
+        }
 
         // Determine python executable path
         const pythonExec = Config.get('python')?.get('python') || 'python3';
@@ -161,37 +172,35 @@ export class JMComicPlugin extends Plugin {
         // Determine jm.py path
         const jmPyPath = Path.join(Path.App, 'jm.py');
 
-        exec(`${pythonExec} ${jmPyPath} ${jmID}`, { windowsHide: true },
-            async (error, stdout, stderr) => {
-                if (error) {
-                    Logger.error(`[${PLUGIN_ID}] Fatal error when executing python script:\n${pythonExec} ${jmPyPath} ${jmID}\n${error}`);
-                    await this.e.reply(`查询出错了...`, true);
+        Logger.info(`[${PLUGIN_ID}] Executing jmcomic query for ${jmID}...`);
+        try {
+            const { stdout, stderr } = await execAsync(`${pythonExec} ${jmPyPath} ${jmID}`, { windowsHide: true });
+            
+            const lines = stdout.split('\n');
+            let line_idx = 0;
+            for (let i = lines.length - 1; i >= 1; --i)
+                if (lines[i].trim()) {
+                    line_idx = i;
+                    break;
                 }
-                else {
-                    const lines = stdout.split('\n');
-                    let line_idx = 0;
-                    for (let i = lines.length - 1; i >= 1; --i)
-                        if (lines[i].trim()) {
-                            line_idx = i;
-                            break;
-                        }
-                    const json_str = lines[line_idx];
-                    const logs = lines.slice(0, line_idx).join('\n');
+            const json_str = lines[line_idx];
+            const logs = lines.slice(0, line_idx).join('\n');
 
-                    try {
-                        const res: any = JSON.parse(json_str);
-                        if (!res.success) {
-                            Logger.warn(`[${PLUGIN_ID}] Query failed for ID ${jmID}:\nError msg:\n${res.msg}\nLogs:\n${logs}`);
-                            await this.e.reply(`查询出错了...`, true);
-                        } else {
-                            this.respond(res.data);
-                        }
-                    } catch (e) {
-                        Logger.error(`[${PLUGIN_ID}] Failed to parse JSON response: ${json_str}\nLogs:\n${logs}`);
-                        await this.e.reply(`查询出错了...`, true);
-                    }
+            try {
+                const res: any = JSON.parse(json_str);
+                if (!res.success) {
+                    Logger.warn(`[${PLUGIN_ID}] Query failed for ID ${jmID}:\nError msg:\n${res.error}\nLogs:\n${logs}`);
+                    await this.e.reply(`查询出错了...`, true);
+                } else {
+                    await this.respond(res.data);
                 }
+            } catch (e) {
+                Logger.error(`[${PLUGIN_ID}] Failed to parse JSON response: ${json_str}\nLogs:\n${logs}`);
+                await this.e.reply(`查询出错了...`, true);
             }
-        );
+        } catch (error) {
+            Logger.error(`[${PLUGIN_ID}] Fatal error when executing python script:\n${pythonExec} ${jmPyPath} ${jmID}\n${error}`);
+            await this.e.reply(`查询出错了...`, true);
+        }
     }
 }
