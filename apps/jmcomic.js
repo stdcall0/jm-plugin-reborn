@@ -103,7 +103,7 @@ export class JMComicPlugin extends Plugin {
         return !disabled_groups.includes(group_id) && enabled_groups.length === 0;
     }
     async jmQuery() {
-        var _a;
+        var _a, _b;
         const jmID = this.e.msg.toLowerCase();
         // We must verify that jmID is in the correct format
         // The correct format is "jm" followed by digits only
@@ -111,11 +111,16 @@ export class JMComicPlugin extends Plugin {
         // However it is already assumed because rule regex is used
         if (!jmID.startsWith("jm"))
             return;
+        const blacklistedIds = ((_a = Config.get('jmcomic')) === null || _a === void 0 ? void 0 : _a.get('jm_blacklist')) || [];
+        if (blacklistedIds.includes(jmID)) {
+            Logger.info(`[${PLUGIN_ID}] Query for blacklisted ID ${jmID} blocked.`);
+            return;
+        }
         // Check if the plugin is enabled for this context
         if (!this.checkTrigger())
             return;
         // Determine python executable path
-        const pythonExec = ((_a = Config.get('python')) === null || _a === void 0 ? void 0 : _a.get('python')) || 'python3';
+        const pythonExec = ((_b = Config.get('python')) === null || _b === void 0 ? void 0 : _b.get('python')) || 'python3';
         // Determine jm.py path
         const jmPyPath = Path.join(Path.App, 'jm.py');
         exec(`${pythonExec} ${jmPyPath} ${jmID}`, { windowsHide: true }, async (error, stdout, stderr) => {
