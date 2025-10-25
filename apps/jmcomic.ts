@@ -146,6 +146,12 @@ export class JMComicPlugin extends Plugin {
         // However it is already assumed because rule regex is used
         if (!jmID.startsWith("jm")) return;
 
+        const blacklistedIds: string[] = Config.get('jmcomic')?.get('jm_blacklist') || [];
+        if (blacklistedIds.includes(jmID)) {
+            Logger.info(`[${PLUGIN_ID}] Query for blacklisted ID ${jmID} blocked.`);
+            return;
+        }
+
         // Check if the plugin is enabled for this context
         if (!this.checkTrigger()) return;
 

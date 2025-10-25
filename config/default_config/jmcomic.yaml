@@ -60,3 +60,8 @@ send_cover: true
 # Whether to put all messages into a forwarded message for clarity.
 # If compact_fields is false, this option is forcefully enabled.
 forward_msg: true
+
+# Blacklisted jm IDs
+jm_blacklist:
+  - jm350234
+  - jm350235
