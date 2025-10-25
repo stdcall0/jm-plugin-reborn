@@ -24,6 +24,6 @@ python3 -m pip install jmcomic -U
 - 支持发送封面
 - 多条消息支持转发消息发送
 
-如果机器人查询失败，可能是 `jmcomic` 内置的 jm 网址过期，请尝试手动更新 Py `jmcomic` 库或者向机器人私聊发送 `#jm更新`。
+如果机器人查询失败，可能是 `jmcomic` 内置的 jm 网址过期，请尝试手动更新 Py `jmcomic` 库。
 
 可以在 `config/jmcomic.yaml` 下修改查询的字段、启用的群聊和是否发送封面图片。
