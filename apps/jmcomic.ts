@@ -62,7 +62,7 @@ export class JMComicPlugin extends Plugin {
         }
 
         const compact_fields = Config.get('jmcomic')?.get('compact_fields') ?? false;
-        const forward_msg = compact_fields || (Config.get('jmcomic')?.get('forward_msg') ?? true);
+        const forward_msg = !compact_fields || (Config.get('jmcomic')?.get('forward_msg') ?? true);
         const send_cover = Config.get('jmcomic')?.get('send_cover') ?? true;
 
         if (fields.length === 0 && !send_cover) {
