@@ -35,7 +35,7 @@ export class JMComicPlugin extends Plugin {
             }
         }
         const compact_fields = (_d = (_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('compact_fields')) !== null && _d !== void 0 ? _d : false;
-        const forward_msg = compact_fields || ((_f = (_e = Config.get('jmcomic')) === null || _e === void 0 ? void 0 : _e.get('forward_msg')) !== null && _f !== void 0 ? _f : true);
+        const forward_msg = !compact_fields || ((_f = (_e = Config.get('jmcomic')) === null || _e === void 0 ? void 0 : _e.get('forward_msg')) !== null && _f !== void 0 ? _f : true);
         const send_cover = (_h = (_g = Config.get('jmcomic')) === null || _g === void 0 ? void 0 : _g.get('send_cover')) !== null && _h !== void 0 ? _h : true;
         if (fields.length === 0 && !send_cover) {
             await this.e.reply('未配置任何要查询的字段，且封面发送已禁用。请检查插件配置。', true);
