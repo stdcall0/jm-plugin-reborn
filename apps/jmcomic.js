@@ -19,7 +19,7 @@ export class JMComicPlugin extends Plugin {
         });
     }
     async respond(data) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         const fields_raw = ((_a = Config.get('jmcomic')) === null || _a === void 0 ? void 0 : _a.get('fields')) || [];
         const fields_description_raw = ((_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('fields_description')) || {};
         // Filter valid fields only,
@@ -34,9 +34,9 @@ export class JMComicPlugin extends Plugin {
                 fields_description[field] = JMComicPlugin.DEFAULT_DESCRIPTIONS[field];
             }
         }
-        const compact_fields = ((_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('compact_fields')) || false;
-        const forward_msg = compact_fields || (((_d = Config.get('jmcomic')) === null || _d === void 0 ? void 0 : _d.get('forward_msg')) || true);
-        const send_cover = ((_e = Config.get('jmcomic')) === null || _e === void 0 ? void 0 : _e.get('send_cover')) || true;
+        const compact_fields = (_d = (_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('compact_fields')) !== null && _d !== void 0 ? _d : false;
+        const forward_msg = compact_fields || ((_f = (_e = Config.get('jmcomic')) === null || _e === void 0 ? void 0 : _e.get('forward_msg')) !== null && _f !== void 0 ? _f : true);
+        const send_cover = (_h = (_g = Config.get('jmcomic')) === null || _g === void 0 ? void 0 : _g.get('send_cover')) !== null && _h !== void 0 ? _h : true;
         if (fields.length === 0 && !send_cover) {
             await this.e.reply('未配置任何要查询的字段，且封面发送已禁用。请检查插件配置。', true);
             return;
@@ -84,11 +84,11 @@ export class JMComicPlugin extends Plugin {
         }
     }
     checkTrigger() {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         const enabled_groups = ((_a = Config.get('jmcomic')) === null || _a === void 0 ? void 0 : _a.get('trigger.enabled_groups')) || [];
         const disabled_groups = ((_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('trigger.disabled_groups')) || [];
-        const enable_pm = ((_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('trigger.enable_pm')) || false;
-        const group_id = (_d = this.e) === null || _d === void 0 ? void 0 : _d.group_id;
+        const enable_pm = (_d = (_c = Config.get('jmcomic')) === null || _c === void 0 ? void 0 : _c.get('trigger.enable_pm')) !== null && _d !== void 0 ? _d : false;
+        const group_id = (_e = this.e) === null || _e === void 0 ? void 0 : _e.group_id;
         if (!group_id) {
             // If there is no group_id (private message), check enable_pm
             return enable_pm;
@@ -105,7 +105,7 @@ export class JMComicPlugin extends Plugin {
         return !disabled_groups.includes(group_id) && enabled_groups.length === 0;
     }
     async jmQuery() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         const jmID = this.e.msg.toLowerCase();
         // We must verify that jmID is in the correct format
         // The correct format is "jm" followed by digits only
@@ -123,12 +123,12 @@ export class JMComicPlugin extends Plugin {
             Logger.info(`[${PLUGIN_ID}] jmcomic plugin is disabled for this context.`);
             return;
         }
-        const startedMsg = ((_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('started_msg')) || true;
+        const startedMsg = (_c = (_b = Config.get('jmcomic')) === null || _b === void 0 ? void 0 : _b.get('started_msg')) !== null && _c !== void 0 ? _c : true;
         if (startedMsg) {
             await this.e.reply(`正在查询 ${jmID}，请稍候...`, true);
         }
         // Determine python executable path
-        const pythonExec = ((_c = Config.get('python')) === null || _c === void 0 ? void 0 : _c.get('python')) || 'python3';
+        const pythonExec = ((_d = Config.get('python')) === null || _d === void 0 ? void 0 : _d.get('python')) || 'python3';
         // Determine jm.py path
         const jmPyPath = Path.join(Path.App, 'jm.py');
         Logger.info(`[${PLUGIN_ID}] Executing jmcomic query for ${jmID}...`);

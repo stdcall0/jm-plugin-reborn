@@ -5,8 +5,7 @@
 # else if disabled_groups is not empty, the plugin is disabled for those groups.
 # If enable_pm is true, the plugin is also enabled for private messages.
 trigger:
-  enabled_groups:
-    - 123456789
+  enabled_groups: []
   disabled_groups: []
   enable_pm: false
 
