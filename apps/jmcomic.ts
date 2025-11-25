@@ -61,9 +61,9 @@ export class JMComicPlugin extends Plugin {
             }
         }
 
-        const compact_fields = Config.get('jmcomic')?.get('compact_fields') || false;
-        const forward_msg = compact_fields || (Config.get('jmcomic')?.get('forward_msg') || true);
-        const send_cover = Config.get('jmcomic')?.get('send_cover') || true;
+        const compact_fields = Config.get('jmcomic')?.get('compact_fields') ?? false;
+        const forward_msg = compact_fields || (Config.get('jmcomic')?.get('forward_msg') ?? true);
+        const send_cover = Config.get('jmcomic')?.get('send_cover') ?? true;
 
         if (fields.length === 0 && !send_cover) {
             await this.e.reply('未配置任何要查询的字段，且封面发送已禁用。请检查插件配置。', true);
@@ -118,7 +118,7 @@ export class JMComicPlugin extends Plugin {
     checkTrigger() {
         const enabled_groups: number[] = Config.get('jmcomic')?.get('trigger.enabled_groups') || [];
         const disabled_groups: number[] = Config.get('jmcomic')?.get('trigger.disabled_groups') || [];
-        const enable_pm: boolean = Config.get('jmcomic')?.get('trigger.enable_pm') || false;
+        const enable_pm: boolean = Config.get('jmcomic')?.get('trigger.enable_pm') ?? false;
 
         const group_id = this.e?.group_id;
         if (!group_id) {
@@ -161,7 +161,7 @@ export class JMComicPlugin extends Plugin {
             return;
         }
 
-        const startedMsg: boolean = Config.get('jmcomic')?.get('started_msg') || true;
+        const startedMsg: boolean = Config.get('jmcomic')?.get('started_msg') ?? true;
         if (startedMsg) {
             await this.e.reply(`正在查询 ${jmID}，请稍候...`, true);
         }
